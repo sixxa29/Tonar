@@ -1,7 +1,19 @@
 package com.example.sigga.tonar.service;
 
+import android.app.Activity;
 import android.os.AsyncTask;
+import android.widget.ArrayAdapter;
+
+import com.example.sigga.tonar.MainActivity;
+import android.view.View;
+import android.widget.ListView;
+
+import com.example.sigga.tonar.adapter.ArrayAdapterConcert;
 import com.example.sigga.tonar.data.Result;
+import com.example.sigga.tonar.data.Results;
+import com.example.sigga.tonar.listener.OnConcertClickListener;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -9,6 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 /**
  * Created by sigga on 8.10.2015.
@@ -16,19 +29,15 @@ import java.net.URLConnection;
 public class MidiConcertsService {
     private MidiConcertsCallback callback;
     private Exception error;
-    private String name;
+    private ArrayAdapterConcert mConcertAdapter;
 
 
     public MidiConcertsService(MidiConcertsCallback callback) {
         this.callback = callback;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void getData() {
-        //this.name = n;
+    public void getData( final int viewId, final Activity mactivity) {
 
         new AsyncTask<String, Void, String>() {
 
@@ -74,30 +83,38 @@ public class MidiConcertsService {
                     return;
                 }
 
+                ArrayList<Results> results = new ArrayList<Results>();
                 try{
+
                     JSONObject data = new JSONObject(s);
-                    JSONObject queryResult = data.getJSONObject("query");
-                    int count = queryResult.optInt("count");
+                    JSONArray queryResult = data.getJSONArray("results");
 
-                    if(count == 0){
-                        callback.serviceFail(new LocationWeatherException("Engir tónleikar með þessu nafni " + name));
-                        return;
+                    for(int i = 0; i < queryResult.length(); i++){
+                        JSONObject concerts = queryResult.getJSONObject(i);
+                        Results result = new Results(   concerts.getString("eventDateName"),
+                                                        concerts.getString("name"),
+                                                        concerts.getString("dateOfShow"),
+                                                        concerts.getString("userGroupName"),
+                                                        concerts.getString("eventHallName"),
+                                                        concerts.getString("imageSource"));
+
+                        results.add(result);
                     }
-
-                    Result result = new Result();
-                    result.populate(queryResult.optJSONObject("results").optJSONObject("eventDateName"));
-
-                    callback.serviceSuccess(result);
 
                 }catch (JSONException e){
                     callback.serviceFail(e);
                 }
+                mConcertAdapter = new ArrayAdapterConcert(mactivity, viewId, results);
+                ListView listViewItems = new ListView(mactivity);
+                listViewItems.setAdapter(mConcertAdapter);
+                //listViewItems.setOnItemClickListener(new OnConcertClickListener());
+                //mConcertAdapter.
             }
         }.execute();
     }
 
-    public class LocationWeatherException extends Exception{
-        public LocationWeatherException(String detailMessage){
+    public class ConcertException extends Exception{
+        public ConcertException(String detailMessage){
             super(detailMessage);
         }
     }

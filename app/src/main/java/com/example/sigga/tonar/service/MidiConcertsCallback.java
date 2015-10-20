@@ -1,6 +1,5 @@
 package com.example.sigga.tonar.service;
 
-import com.example.sigga.tonar.data.EventName;
 import com.example.sigga.tonar.data.Result;
 
 /**

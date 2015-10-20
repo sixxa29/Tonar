@@ -1,21 +1,20 @@
 package com.example.sigga.tonar;
 
-import android.app.ProgressDialog;
-import android.content.ClipData;
-import android.graphics.drawable.Drawable;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ImageView;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Log;
+import android.app.AlertDialog;
 
-import com.example.sigga.tonar.data.EventName;
-import com.example.sigga.tonar.data.Name;
+
+import com.example.sigga.tonar.data.EventDateName;
 import com.example.sigga.tonar.data.Result;
-import com.example.sigga.tonar.rest.MidiQuery;
-import com.example.sigga.tonar.service.ConcertService;
 import com.example.sigga.tonar.service.MidiConcertsCallback;
 import com.example.sigga.tonar.service.MidiConcertsService;
 
@@ -23,9 +22,8 @@ public class MainActivity extends AppCompatActivity implements MidiConcertsCallb
 
     private TextView tonleikarTextView;
     private TextView nameTextView;
-    private MidiQuery concert;
-    //private MidiConcertsService service;
-
+    private MidiConcertsService service;
+    AlertDialog alertDialogStores;
 
 
 
@@ -33,24 +31,31 @@ public class MainActivity extends AppCompatActivity implements MidiConcertsCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        service = new MidiConcertsService(this);
+        View.OnClickListener handler = new View.OnClickListener() {
+            public void onClick(View v){
+                switch(v.getId()){
+                    case R.id.buttonShowPopUp:
+                        service.getData(R.layout.list_view_row_item, MainActivity.this);
+                        break;
+                }
 
-        tonleikarTextView = (TextView)findViewById(R.id.tonleikarTextView);
-        nameTextView = (TextView)findViewById(R.id.nameTextView);
+            }
+        };
+
+        findViewById(R.id.buttonShowPopUp).setOnClickListener(handler);
 
 
-        concert = new MidiQuery();
-        concert.getConcert();
-        
     }
+
 
     @Override
     public void serviceSuccess(Result result) {
 
-        EventName event = result.getEvent();
+        EventDateName event = result.getEventDateName();
+        Log.i("serviceSuccess", "eftir event dæmið");
 
-
-        tonleikarTextView.setText(event.getEventName());
-        //nameTextView.setText(service.getName());
+        tonleikarTextView.setText(event.getEventDateName());
 
     }
 
