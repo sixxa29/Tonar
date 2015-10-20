@@ -1,10 +1,10 @@
-package com.example.sigga.tonar.rest;
+package com.example.sigga.tonar.ATest.Model.rest;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.sigga.tonar.Model.Concert;
+import com.example.sigga.tonar.ATest.Model.Concert;
 
 import java.util.List;
 

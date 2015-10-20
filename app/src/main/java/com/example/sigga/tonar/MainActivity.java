@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 
 
 import com.example.sigga.tonar.data.EventDateName;
+import com.example.sigga.tonar.data.ObjectItem;
 import com.example.sigga.tonar.data.Result;
 import com.example.sigga.tonar.service.MidiConcertsCallback;
 import com.example.sigga.tonar.service.MidiConcertsService;
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements MidiConcertsCallb
     private TextView tonleikarTextView;
     private TextView nameTextView;
     private MidiConcertsService service;
-    AlertDialog alertDialogStores;
+    public AlertDialog alertDialogStores;
 
 
 
@@ -36,7 +37,9 @@ public class MainActivity extends AppCompatActivity implements MidiConcertsCallb
             public void onClick(View v){
                 switch(v.getId()){
                     case R.id.buttonShowPopUp:
+                        Log.i("onCreate", "fyrir allt");
                         service.getData(R.layout.list_view_row_item, MainActivity.this);
+                        Log.i("onCreate", "eftir allt");
                         break;
                 }
 

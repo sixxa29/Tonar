@@ -24,9 +24,9 @@ public class OnConcertClickListener implements AdapterView.OnItemClickListener {
 
         String listItemId = textViewItem.getTag().toString();
 
-       // Toast.makeText(context, "Item: " + listItemText + ", Item ID: " + listItemId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Item: " + listItemText + ", Item ID: " + listItemId, Toast.LENGTH_SHORT).show();
 
-        //((MainActivity) context).alertDialogStores.cancel();
+        ((MainActivity) context).alertDialogStores.cancel();
 
     }
 

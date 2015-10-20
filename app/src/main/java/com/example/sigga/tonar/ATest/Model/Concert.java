@@ -1,4 +1,4 @@
-package com.example.sigga.tonar.Model;
+package com.example.sigga.tonar.ATest.Model;
 
 /**
  * Created by sigga on 18.10.2015.

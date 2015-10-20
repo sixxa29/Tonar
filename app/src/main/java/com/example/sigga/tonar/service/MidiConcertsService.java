@@ -1,7 +1,9 @@
 package com.example.sigga.tonar.service;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import com.example.sigga.tonar.MainActivity;
@@ -30,6 +32,7 @@ public class MidiConcertsService {
     private MidiConcertsCallback callback;
     private Exception error;
     private ArrayAdapterConcert mConcertAdapter;
+    AlertDialog alertDialogStores;
 
 
     public MidiConcertsService(MidiConcertsCallback callback) {
@@ -38,9 +41,8 @@ public class MidiConcertsService {
 
 
     public void getData( final int viewId, final Activity mactivity) {
-
+        Log.i("getData", "fyrir allt");
         new AsyncTask<String, Void, String>() {
-
             /*We will be making the API call in a separate thread, which is always a good
             practice since the user interface will not be blocked while the call is being made.
             This is especially important in mobile devices that may drop network connections
@@ -49,7 +51,7 @@ public class MidiConcertsService {
 
             @Override
             protected String doInBackground(String... params) {
-
+                Log.i("doInBackground", "fyrir allt");
                 final String endpoint = "http://apis.is/concerts";
 
                 try {
@@ -71,13 +73,13 @@ public class MidiConcertsService {
                 } catch (Exception e) {
                     error = e;
                 }
-
+                Log.i("doInBackground", "eftir allt");
                 return null;
             }
 
             @Override
             protected void onPostExecute(String s) {
-
+                Log.i("onPostExecute", "fyrir allt");
                 if(s == null && error != null){
                     callback.serviceFail(error);
                     return;
@@ -85,7 +87,7 @@ public class MidiConcertsService {
 
                 ArrayList<Results> results = new ArrayList<Results>();
                 try{
-
+                    Log.i("tryJson parsing", "fyrir allt");
                     JSONObject data = new JSONObject(s);
                     JSONArray queryResult = data.getJSONArray("results");
 
@@ -104,13 +106,20 @@ public class MidiConcertsService {
                 }catch (JSONException e){
                     callback.serviceFail(e);
                 }
+                Log.i("onPostExecute", "eftr allt");
                 mConcertAdapter = new ArrayAdapterConcert(mactivity, viewId, results);
                 ListView listViewItems = new ListView(mactivity);
                 listViewItems.setAdapter(mConcertAdapter);
-                //listViewItems.setOnItemClickListener(new OnConcertClickListener());
-                //mConcertAdapter.
+                listViewItems.setOnItemClickListener(new OnConcertClickListener());
+                alertDialogStores = new AlertDialog.Builder(mactivity)
+                        .setView(listViewItems)
+                        .setTitle("Stores")
+                        .show();
+
             }
+
         }.execute();
+        Log.i("getData", "eftr allt");
     }
 
     public class ConcertException extends Exception{

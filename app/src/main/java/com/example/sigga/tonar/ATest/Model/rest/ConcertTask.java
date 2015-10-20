@@ -1,7 +1,7 @@
-package com.example.sigga.tonar.rest;
+package com.example.sigga.tonar.ATest.Model.rest;
 
 
-import com.example.sigga.tonar.Model.Concert;
+import com.example.sigga.tonar.ATest.Model.Concert;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -108,5 +108,6 @@ class ConcertTask extends AsyncTask<Void, Void, Concert> {
 
         return concert;
     }
+
 
 }
