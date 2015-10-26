@@ -4,14 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-
-import com.example.sigga.tonar.MainActivity;
-import android.view.View;
 import android.widget.ListView;
 
 import com.example.sigga.tonar.adapter.ArrayAdapterConcert;
-import com.example.sigga.tonar.data.Result;
 import com.example.sigga.tonar.data.Results;
 import com.example.sigga.tonar.listener.OnConcertClickListener;
 
@@ -32,15 +27,17 @@ public class MidiConcertsService {
     private MidiConcertsCallback callback;
     private Exception error;
     private ArrayAdapterConcert mConcertAdapter;
-    AlertDialog alertDialogStores;
+    private AlertDialog alertDialogStores;
 
 
-    public MidiConcertsService(MidiConcertsCallback callback) {
+    public MidiConcertsService(MidiConcertsCallback callback, AlertDialog alertDialogStores1 ) {
         this.callback = callback;
+        this.alertDialogStores = alertDialogStores1;
     }
 
 
-    public void getData( final int viewId, final Activity mactivity) {
+    public void getData(final int viewId, final Activity mactivity) {
+        //alertDialogStores1 = this.alertDialogStores;
         Log.i("getData", "fyrir allt");
         new AsyncTask<String, Void, String>() {
             /*We will be making the API call in a separate thread, which is always a good
@@ -113,8 +110,9 @@ public class MidiConcertsService {
                 listViewItems.setOnItemClickListener(new OnConcertClickListener());
                 alertDialogStores = new AlertDialog.Builder(mactivity)
                         .setView(listViewItems)
-                        .setTitle("Stores")
+                        .setTitle("Allir tónleikar")
                         .show();
+
 
             }
 
