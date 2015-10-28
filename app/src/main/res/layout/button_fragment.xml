@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/concerto">
+
+        <Button
+            android:id="@+id/buttonShowPopUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Allir Tónleikar"
+            android:textSize="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="153dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:background="#7e5f9922"
+            android:layout_weight="1"
+            android:textColor="#faf9ff" />
+        <Space
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+        <Button
+            android:id="@+id/buttonShowPopUp2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Vinsælast"
+            android:textSize="30dp"
+            android:singleLine="true"
+            android:layout_below="@+id/buttonShowPopUp"
+            android:layout_centerHorizontal="true"
+            android:background="#7ac14337"
+            android:layout_weight="1"
+            android:textColor="#faf9ff"/>
+        <Space
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+        <Button
+            android:id="@+id/buttonShowPopUp3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tónleikarnir Mínir"
+            android:textSize="30dp"
+            android:layout_below="@+id/buttonShowPopUp2"
+            android:layout_centerHorizontal="true"
+            android:background="#7c261fc1"
+            android:layout_weight="1"
+            android:textColor="#faf9ff"/>
+        <Space
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+    </LinearLayout>
+
+</LinearLayout>

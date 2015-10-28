@@ -2,10 +2,17 @@ package com.example.sigga.tonar.service;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.sigga.tonar.MainActivity;
+import com.example.sigga.tonar.R;
 import com.example.sigga.tonar.adapter.ArrayAdapterConcert;
 import com.example.sigga.tonar.data.Results;
 import com.example.sigga.tonar.listener.OnConcertClickListener;
@@ -28,11 +35,11 @@ public class MidiConcertsService {
     private Exception error;
     private ArrayAdapterConcert mConcertAdapter;
     private AlertDialog alertDialogStores;
+    public ArrayList<Results> results = new ArrayList<Results>();
 
 
-    public MidiConcertsService(MidiConcertsCallback callback, AlertDialog alertDialogStores1 ) {
+    public MidiConcertsService(MidiConcertsCallback callback ) {
         this.callback = callback;
-        this.alertDialogStores = alertDialogStores1;
     }
 
 
@@ -82,7 +89,7 @@ public class MidiConcertsService {
                     return;
                 }
 
-                ArrayList<Results> results = new ArrayList<Results>();
+
                 try{
                     Log.i("tryJson parsing", "fyrir allt");
                     JSONObject data = new JSONObject(s);
@@ -91,11 +98,11 @@ public class MidiConcertsService {
                     for(int i = 0; i < queryResult.length(); i++){
                         JSONObject concerts = queryResult.getJSONObject(i);
                         Results result = new Results(   concerts.getString("eventDateName"),
-                                                        concerts.getString("name"),
-                                                        concerts.getString("dateOfShow"),
-                                                        concerts.getString("userGroupName"),
-                                                        concerts.getString("eventHallName"),
-                                                        concerts.getString("imageSource"));
+                                concerts.getString("name"),
+                                concerts.getString("dateOfShow"),
+                                concerts.getString("userGroupName"),
+                                concerts.getString("eventHallName"),
+                                concerts.getString("imageSource"));
 
                         results.add(result);
                     }
@@ -107,11 +114,12 @@ public class MidiConcertsService {
                 mConcertAdapter = new ArrayAdapterConcert(mactivity, viewId, results);
                 ListView listViewItems = new ListView(mactivity);
                 listViewItems.setAdapter(mConcertAdapter);
-                listViewItems.setOnItemClickListener(new OnConcertClickListener());
+                listViewItems.setOnItemClickListener(new OnConcertClickListener2());
                 alertDialogStores = new AlertDialog.Builder(mactivity)
                         .setView(listViewItems)
                         .setTitle("Allir tónleikar")
                         .show();
+
 
 
             }
@@ -120,6 +128,26 @@ public class MidiConcertsService {
         Log.i("getData", "eftr allt");
     }
 
+
+    public class OnConcertClickListener2 implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Context context = view.getContext();
+
+            TextView textViewItem = ((TextView) view.findViewById(R.id.textViewItem));
+
+            String listItemText = textViewItem.getText().toString();
+
+            String listItemId = textViewItem.getTag().toString();
+
+            Toast.makeText(context, "Item: " + listItemText + ", Item ID: " + listItemId, Toast.LENGTH_SHORT).show();
+            //alertDialogStores.setView(textViewItem);
+            alertDialogStores.cancel();
+
+        }
+
+    }
     public class ConcertException extends Exception{
         public ConcertException(String detailMessage){
             super(detailMessage);
