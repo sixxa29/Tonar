@@ -2,6 +2,7 @@ package com.example.sigga.tonar.service;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -145,6 +146,13 @@ public class MidiConcertsService {
             Toast.makeText(context, "Item: " + listItemText + ", Item ID: " + listItemId, Toast.LENGTH_SHORT).show();
             //alertDialogStores.setView(textViewItem);
             alertDialogStores.cancel();
+            // custom dialog
+            final Dialog dialog = new Dialog(context);
+            dialog.setContentView(R.layout.list_view_row_item);
+            dialog.setTitle("Title...");
+            dialog.show();
+
+            //alertDialogStores.cancel();
 
         }
 
