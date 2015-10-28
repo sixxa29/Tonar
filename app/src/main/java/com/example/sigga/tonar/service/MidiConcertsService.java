@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -143,14 +144,26 @@ public class MidiConcertsService {
 
             String listItemId = textViewItem.getTag().toString();
 
+
+
             Toast.makeText(context, "Item: " + listItemText + ", Item ID: " + listItemId, Toast.LENGTH_SHORT).show();
             //alertDialogStores.setView(textViewItem);
             alertDialogStores.cancel();
             // custom dialog
             final Dialog dialog = new Dialog(context);
-            dialog.setContentView(R.layout.list_view_row_item);
-            dialog.setTitle("Title...");
+            dialog.setContentView(R.layout.single_concert);
+            dialog.setTitle(textViewItem.getText().toString());
+
+
+
+            TextView text = (TextView) dialog.findViewById(R.id.TonleikarTextview);
+            text.setText(listItemText);
+
+            ImageView image = (ImageView) view.findViewById(R.id.imageView);
+            ImageView img = (ImageView) dialog.findViewById(R.id.TonleikarImageView);
+            img.setImageDrawable(image.getDrawable());
             dialog.show();
+
 
             //alertDialogStores.cancel();
 
