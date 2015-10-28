@@ -1,8 +1,6 @@
 package com.example.sigga.tonar;
 
 import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,19 +13,13 @@ import android.widget.Toast;
 import android.util.Log;
 
 
-import com.example.sigga.tonar.DB.ConcertDB;
 import com.example.sigga.tonar.DB.DbHelper;
 import com.example.sigga.tonar.data.EventDateName;
 import com.example.sigga.tonar.data.Result;
-import com.example.sigga.tonar.data.Results;
-import com.example.sigga.tonar.fragment.MasterFragment;
 import com.example.sigga.tonar.service.MidiConcertsCallback;
 import com.example.sigga.tonar.service.MidiConcertsService;
 
-import java.util.ArrayList;
-
-public class MainActivity extends AppCompatActivity implements MidiConcertsCallback, MasterFragment.OnButtonSelectedListeners {
-
+public class MainActivity extends AppCompatActivity implements MidiConcertsCallback {
 
     private TextView tonleikarTextView;
     private TextView nameTextView;
@@ -35,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements MidiConcertsCallb
     public AlertDialog alertDialogStores;
     private DbHelper m_dbHelper;
     private SQLiteDatabase m_db;
-    private ArrayList<Results> r;
+
     private Cursor m_cursor;
     private SimpleCursorAdapter m_ca;
 
@@ -43,23 +35,31 @@ public class MainActivity extends AppCompatActivity implements MidiConcertsCallb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_fragment);
+        setContentView(R.layout.activity_main);
         service = new MidiConcertsService(this);
+        View.OnClickListener handler = new View.OnClickListener() {
+            public void onClick(View v){
+                switch(v.getId()){
+                    case R.id.buttonShowPopUp:
+                        Log.i("onCreate", "fyrir allt");
+                        service.getData( R.layout.list_view_row_item, MainActivity.this);
+                        Log.i("onCreate", "eftir allt");
+                        break;
+                    case R.id.buttonShowPopUp2:
+                        Log.i("onCreate", "HELVITI");
+                        String arr = service.results.get(1).toString();
+                        Toast.makeText(MainActivity.this, "hello", Toast.LENGTH_SHORT).show();
+                }
 
-        MasterFragment firstFragment = new MasterFragment();
-        firstFragment.setArguments(getIntent().getExtras());
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, firstFragment);
-        fragmentTransaction.commit();
+            }
+        };
+
+        findViewById(R.id.buttonShowPopUp).setOnClickListener(handler);
+        findViewById(R.id.buttonShowPopUp2).setOnClickListener(handler);
+
 
     }
 
-    @Override
-    public void onButtonSelected(int position) {
-        service.getData( R.layout.list_view_row_item, MainActivity.this);
-        //r = service.getResults();
-    }
 
     @Override
     public void serviceSuccess(Result result) {

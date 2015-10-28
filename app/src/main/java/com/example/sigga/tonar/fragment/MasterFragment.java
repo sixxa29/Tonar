@@ -11,12 +11,12 @@ import android.widget.ListView;
  * Created by sigga on 27.10.2015.
  */
 public class MasterFragment extends ListFragment {
-
+/*
     public interface OnButtonSelectedListeners {
         public void onButtonSelected( int position );
     }
     OnButtonSelectedListeners mListeners;
-
+*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class MasterFragment extends ListFragment {
         // Create an array adapter for the list view, using the Ipsum headlines array
         setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_expandable_list_item_1, Headlines ));
     }
-
+/*
     @Override
     public void onAttach( Activity activity ) {
         super.onAttach( activity );
@@ -49,4 +49,5 @@ public class MasterFragment extends ListFragment {
         super.onStart();
         getListView().setChoiceMode( ListView.CHOICE_MODE_SINGLE );
     }
+    */
 }
