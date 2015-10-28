@@ -26,40 +26,23 @@ import java.util.ArrayList;
 /**
  * Created by sigga on 26.10.2015.
  */
-public class ConcertListFragment extends ListFragment{
+public class ConcertListFragment extends MasterFragment{
 
-    //MidiConcertsService s = new MidiConcertsService(this);
-     ArrayList<Results> data;
-  //  ArrayAdapterConcert arrayAdapterConcert = new ArrayAdapterConcert(getActivity(), R.layout.list_view_row_item, data);
     public final static String ARG_POSITION = "position";
     int mCurrentPosition = -1;
+   // private ArrayAdapterConcert concertAdapter = new ArrayAdapterConcert(getActivity(), R.layout.list_view_row_item, data);
 
-
-    public void dataArr(ArrayList<Results> data){
+    /*public void dataArr(ArrayList<Results> data){
         this.data = data;
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Create an array adapter for the list view, using the Ipsum headlines array
-        //s.getData();
-        //data = s.results;
-        setListAdapter(new ArrayAdapterConcert(getActivity(), R.layout.list_view_row_item, data));
+      //  setListAdapter(concertAdapter);
     }
 
-
-                /*
-                Log.i("onPostExecute", "eftr allt");
-                mConcertAdapter = new ArrayAdapterConcert(mactivity, viewId, results);
-                ListView listViewItems = new ListView(mactivity);
-                listViewItems.setAdapter(mConcertAdapter);
-                listViewItems.setOnItemClickListener(new OnConcertClickListener());
-                alertDialogStores = new AlertDialog.Builder(mactivity)
-                        .setView(listViewItems)
-                        .setTitle("Allir tónleikar")
-                        .show();*/
 
     @Override
     public void onStart() {

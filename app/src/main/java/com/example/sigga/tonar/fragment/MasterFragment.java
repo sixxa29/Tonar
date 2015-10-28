@@ -22,8 +22,8 @@ public class MasterFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String[] Headlines = {
-                "Takki 1",
-                "Takki 2"
+                "Allir tónleikar",
+                "Inga er best ef þetta virkar"
         };
         // Create an array adapter for the list view, using the Ipsum headlines array
         setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_expandable_list_item_1, Headlines ));

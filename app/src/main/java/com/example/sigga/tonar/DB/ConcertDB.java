@@ -17,9 +17,9 @@ public class ConcertDB {
                     "eventDateName TEXT," +
                     "name TEXT," +
                     "dateOfShow TEXT," +
-                    "userGroupName, TEXT," +
-                    "eventHallName, TEXT" +
-                    "imageSource, TEXT" +
+                    "userGroupName TEXT," +
+                    "eventHallName TEXT," +
+                    "imageSource TEXT" +
                     ");";
 
     private static final String sqlDropTable =
@@ -44,7 +44,7 @@ public class ConcertDB {
         cv.put( TableConcertsCol[6], imageSource );
         return db.insert( TableConcerts, null, cv );
     }
-// "eventDateName", "name", "dateOfShow", "userGroupName", "eventHallName","imageSource"
+
     public static Cursor query( SQLiteDatabase db ) {
         Cursor cursor = db.query( TableConcerts, TableConcertsCol, null, null, null, null, null );
         return cursor;
