@@ -163,8 +163,27 @@ public class MidiConcertsService {
             dialog.setContentView(R.layout.single_concert);
             dialog.setTitle(eventDateName);
 
-            TextView text = (TextView) dialog.findViewById(R.id.TonleikarTextview);
-            text.setText(name);
+            TextView concertName = (TextView) dialog.findViewById(R.id.ConcertName);
+            concertName.setText(eventDateName);
+            String dateInString = r.getDateOfShow();
+            SimpleDateFormat oldformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            try {
+                Date date = oldformat.parse(dateInString);
+                DateFormat formats = null;
+                String monthYear = formats.getDateInstance().format(date);
+                TextView concertDate = (TextView) dialog.findViewById(R.id.ConcertDate);
+                concertDate.setText(monthYear);
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                Date date1 = oldformat.parse(dateInString);
+                String reformattedTime = timeFormat.format(date1);
+                TextView concertTime = (TextView) dialog.findViewById(R.id.ConcertTime);
+                concertTime.setText("Kl " + reformattedTime);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            TextView concertLocation = (TextView) dialog.findViewById(R.id.ConcertLocation);
+            concertLocation.setText(eventHallName);
 
             ImageView image = (ImageView) view.findViewById(R.id.imageView);
             ImageView img = (ImageView) dialog.findViewById(R.id.TonleikarImageView);
