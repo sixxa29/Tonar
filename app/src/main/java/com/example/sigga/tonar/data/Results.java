@@ -10,18 +10,26 @@ public class Results {
     private String userGroupName;
     private String eventHallName;
     private String imageSource;
+    private int pos;
 
 
     public Results(String eventDateName,    String name,
                    String dateOfShow,       String userGroupName,
-                   String eventHallName,      String imageSource) {
+                   String eventHallName,      String imageSource, int pos) {
         this.eventDateName = eventDateName;
         this.name = name;
         this.dateOfShow = dateOfShow;
         this.userGroupName = userGroupName;
         this.eventHallName = eventHallName;
         this.imageSource = imageSource;
+        this.pos = pos;
 
+    }
+
+    public int getPos(){ return pos; }
+
+    public void setPos(int pos){
+        this.pos = pos;
     }
 
     public String getEventDateName() {
