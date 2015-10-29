@@ -131,6 +131,7 @@ public class MidiConcertsService {
                 listViewItems.setAdapter(mConcertAdapter);
                 listViewItems.setOnItemClickListener(new OnConcertClickListener2());
                 alertDialogStores = new AlertDialog.Builder(mactivity)
+                        .setCustomTitle(listViewItems)
                         .setView(listViewItems)
                         .show();
 
