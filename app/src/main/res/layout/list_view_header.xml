@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:paddingBottom="5dp"
     android:paddingTop="5dp"
-    android:layout_height="50dp"
-    android:background="#f8ffffff"
+    android:layout_height="40dp"
+    android:background="#3b3b3b"
     android:id="@+id/hedder">
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:src="@drawable/back"
         android:layout_marginEnd="47dp"
         android:layout_alignParentTop="true"
