@@ -1,9 +1,14 @@
 package com.example.sigga.tonar;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.provider.CalendarContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +23,8 @@ import com.example.sigga.tonar.data.EventDateName;
 import com.example.sigga.tonar.data.Result;
 import com.example.sigga.tonar.service.MidiConcertsCallback;
 import com.example.sigga.tonar.service.MidiConcertsService;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements MidiConcertsCallback {
 
@@ -35,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements MidiConcertsCallb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
         service = new MidiConcertsService(this);
         View.OnClickListener handler = new View.OnClickListener() {
@@ -47,8 +55,7 @@ public class MainActivity extends AppCompatActivity implements MidiConcertsCallb
                         break;
                     case R.id.buttonShowPopUp2:
                         Log.i("onCreate", "HELVITI");
-                        String arr = service.results.get(1).toString();
-                        Toast.makeText(MainActivity.this, "hello", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Hæ þú ert kisa", Toast.LENGTH_SHORT).show();
                 }
 
             }
