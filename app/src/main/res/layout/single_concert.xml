@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/eventAddButton"
         android:clickable="true"
-        android:src="@drawable/ff" />
+  />
 
     <TextView
         android:id="@+id/TonleikarTextview"
