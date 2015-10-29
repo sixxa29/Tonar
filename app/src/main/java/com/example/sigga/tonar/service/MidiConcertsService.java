@@ -3,11 +3,17 @@ package com.example.sigga.tonar.service;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,7 +33,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by sigga on 8.10.2015.
@@ -37,7 +47,8 @@ public class MidiConcertsService {
     private Exception error;
     private ArrayAdapterConcert mConcertAdapter;
     private AlertDialog alertDialogStores;
-    public ArrayList<Results> results = new ArrayList<Results>();
+    private ArrayList<Results> results = new ArrayList<Results>();
+    private Activity m;
 
 
     public MidiConcertsService(MidiConcertsCallback callback ) {
@@ -46,6 +57,7 @@ public class MidiConcertsService {
 
 
     public void getData(final int viewId, final Activity mactivity) {
+        this.m = mactivity;
         //alertDialogStores1 = this.alertDialogStores;
         Log.i("getData", "fyrir allt");
         new AsyncTask<String, Void, String>() {
@@ -104,7 +116,7 @@ public class MidiConcertsService {
                                 concerts.getString("dateOfShow"),
                                 concerts.getString("userGroupName"),
                                 concerts.getString("eventHallName"),
-                                concerts.getString("imageSource"));
+                                concerts.getString("imageSource"), i);
 
                         results.add(result);
                     }
@@ -123,8 +135,6 @@ public class MidiConcertsService {
                         .setTitle("Allir tónleikar")
                         .show();
 
-
-
             }
 
         }.execute();
@@ -135,33 +145,37 @@ public class MidiConcertsService {
     public class OnConcertClickListener2 implements AdapterView.OnItemClickListener {
 
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Context context = view.getContext();
+        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+            final Context context = view.getContext();
 
-            TextView textViewItem = ((TextView) view.findViewById(R.id.textViewItem));
+            Results r = results.get(position);
+            final String eventDateName = r.getEventDateName();
+            final String name = r.getName();
+            final String dateOfShow = r.getDateOfShow();
+            String userGroupName = r.getUserGroupName();
+            final String eventHallName = r.getEventHallName();
 
-            String listItemText = textViewItem.getText().toString();
-
-            String listItemId = textViewItem.getTag().toString();
-
-
-
-            Toast.makeText(context, "Item: " + listItemText + ", Item ID: " + listItemId, Toast.LENGTH_SHORT).show();
-            //alertDialogStores.setView(textViewItem);
             alertDialogStores.cancel();
-            // custom dialog
+
             final Dialog dialog = new Dialog(context);
             dialog.setContentView(R.layout.single_concert);
-            dialog.setTitle(textViewItem.getText().toString());
-
-
+            dialog.setTitle(eventDateName);
 
             TextView text = (TextView) dialog.findViewById(R.id.TonleikarTextview);
-            text.setText(listItemText);
+            text.setText(name);
+
+
 
             ImageView image = (ImageView) view.findViewById(R.id.imageView);
             ImageView img = (ImageView) dialog.findViewById(R.id.TonleikarImageView);
             img.setImageDrawable(image.getDrawable());
+            View.OnClickListener handler = new View.OnClickListener() {
+                public void onClick(View v){
+                    addToCal( dateOfShow, eventDateName, eventHallName, name, position, m);
+                }
+            };
+            dialog.findViewById(R.id.eventAddButton).setOnClickListener(handler);
+
             dialog.show();
 
 
@@ -169,10 +183,51 @@ public class MidiConcertsService {
 
         }
 
+
+        public void addToCal(String dateInString, String eventDateName, String eventHallName, String name, int pos, Activity mactivity ){
+
+            String year = dateInString.split("-")[0];
+            String month = dateInString.split("-")[1];
+            String dayplus = dateInString.split("-")[2];
+            String day = dayplus.split("T")[0];
+            String hourminute = dateInString.split("T")[1];
+            String hour = hourminute.split(":")[0];
+            String minute = hourminute.split(":")[1];
+
+
+
+            //"YY:MM:dd:hh:mm"
+            Calendar beginTime = Calendar.getInstance();
+            beginTime.set(Integer.parseInt(year), Integer.parseInt(month)-1, Integer.parseInt(day), Integer.parseInt(hour), Integer.parseInt(minute));
+            long startMillis = beginTime.getTimeInMillis();
+            Calendar endTime = Calendar.getInstance();
+            endTime.set(Integer.parseInt(year), Integer.parseInt(month)-1, Integer.parseInt(day), Integer.parseInt(hour) + 2, Integer.parseInt(minute));
+            long endMillis = endTime.getTimeInMillis();
+
+
+            Intent intent = new Intent(Intent.ACTION_INSERT)
+                    .setData(CalendarContract.Events.CONTENT_URI)
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
+                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
+                    .putExtra(CalendarContract.Events.TITLE, eventDateName)
+                    .putExtra(CalendarContract.Events.DESCRIPTION, name)
+                    .putExtra(CalendarContract.Events.EVENT_LOCATION, eventHallName)
+                    .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+            mactivity.startActivity(intent);
+
+
+
+        }
     }
+
     public class ConcertException extends Exception{
         public ConcertException(String detailMessage){
             super(detailMessage);
         }
     }
+
+
+
+
+
 }
