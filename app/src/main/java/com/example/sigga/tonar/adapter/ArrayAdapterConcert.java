@@ -62,21 +62,24 @@ public class ArrayAdapterConcert extends ArrayAdapter<Results>  {
 
         TextView textViewItem = (TextView) convertView.findViewById(R.id.textViewItem);
         TextView textViewItem2 = (TextView) convertView.findViewById(R.id.textViewItem2);
+        TextView textViewItem3 = (TextView) convertView.findViewById(R.id.textViewItem3);
+
         textViewItem.setText(result.getEventDateName());
         textViewItem.setTag(result.getDateOfShow());
 
         String dateInString = result.getDateOfShow();
         SimpleDateFormat oldformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-        String bla = dateInString.split("T")[0];
         try {
-            SimpleDateFormat newformat = new SimpleDateFormat("dd-MM-yyyy");
             Date date = oldformat.parse(dateInString);
             DateFormat formats = null;
+            String monthYear = formats.getDateInstance().format(date);
+            textViewItem2.setText(monthYear);
 
-            String reformattedStr = newformat.format(date);
-            String rerere = formats.getDateInstance().format(date);
-            textViewItem2.setText(rerere);
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+            Date date1 = oldformat.parse(dateInString);
+            String reformattedTime = timeFormat.format(date1);
+            textViewItem3.setText("Kl " + reformattedTime);
         }
         catch (Exception e){
             return null;
