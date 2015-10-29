@@ -13,49 +13,55 @@
         android:src="@drawable/tonar"
         android:layout_alignParentStart="true"
         android:layout_gravity="center_horizontal|top"
-        android:background="#ACACAC"
-        android:foreground="#787c7c7c" />
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#82555555"
+        android:background="#96414141"
         android:orientation="vertical"
-        android:layout_gravity="left|bottom">
+        android:layout_gravity="left|bottom"
+        >
         <TextView
             android:id="@+id/textViewItem"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textColor="#f8f8f8"
+            android:textColor="#ffffff"
             android:textSize="30dp"
             android:text="Tonleikar"
             style="@style/AlertDialog.AppCompat"
             android:layout_gravity="center"
             android:foregroundGravity="top"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:fontFamily="sans-serif-light"
+            />
         <TextView
             android:id="@+id/textViewItem2"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textColor="#f8f8f8"
+            android:textColor="#ffffff"
             android:textSize="20dp"
             android:text="Dagsetning"
             style="@style/AlertDialog.AppCompat"
             android:layout_gravity="center_horizontal|bottom"
             android:foregroundGravity="top"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:fontFamily="sans-serif-light"
+            />
         <TextView
             android:id="@+id/textViewItem3"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textColor="#f8f8f8"
+            android:textColor="#ffffff"
             android:textSize="18dp"
             android:text="Tími"
             style="@style/AlertDialog.AppCompat"
             android:layout_gravity="center_horizontal|bottom"
             android:foregroundGravity="top"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:fontFamily="sans-serif-light"
+            />
     </LinearLayout>
 </FrameLayout>
