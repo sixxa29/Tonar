@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.CalendarContract;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -130,9 +131,11 @@ public class MidiConcertsService {
                 ListView listViewItems = new ListView(mactivity);
                 listViewItems.setAdapter(mConcertAdapter);
                 listViewItems.setOnItemClickListener(new OnConcertClickListener2());
+                LayoutInflater inflater = mactivity.getLayoutInflater();
+                View view=inflater.inflate(R.layout.list_view_header, null);
                 alertDialogStores = new AlertDialog.Builder(mactivity)
-                        .setCustomTitle(listViewItems)
                         .setView(listViewItems)
+                        .setCustomTitle(view)
                         .show();
 
             }
