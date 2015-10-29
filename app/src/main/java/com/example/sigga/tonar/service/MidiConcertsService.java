@@ -132,7 +132,6 @@ public class MidiConcertsService {
                 listViewItems.setOnItemClickListener(new OnConcertClickListener2());
                 alertDialogStores = new AlertDialog.Builder(mactivity)
                         .setView(listViewItems)
-                        .setTitle("Allir tónleikar")
                         .show();
 
             }
@@ -155,7 +154,6 @@ public class MidiConcertsService {
             String userGroupName = r.getUserGroupName();
             final String eventHallName = r.getEventHallName();
 
-            alertDialogStores.cancel();
 
             final Dialog dialog = new Dialog(context);
             dialog.setContentView(R.layout.single_concert);
@@ -163,8 +161,6 @@ public class MidiConcertsService {
 
             TextView text = (TextView) dialog.findViewById(R.id.TonleikarTextview);
             text.setText(name);
-
-
 
             ImageView image = (ImageView) view.findViewById(R.id.imageView);
             ImageView img = (ImageView) dialog.findViewById(R.id.TonleikarImageView);
