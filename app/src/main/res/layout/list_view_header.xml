@@ -1,23 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp"
     android:layout_height="50dp"
-    android:padding="5dp"
-    android:background="#bb373737"
+    android:background="#f8ffffff"
     android:id="@+id/hedder">
-
-    <!-- title >
-    <TextView
-        android:id="@+id/header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:textSize="16dp"
-        android:layout_marginLeft="12dp"
-        android:layout_above="@+id/view"
-        android:layout_centerHorizontal="true" /-->
-
-    <!--  divider -->
 
     <ImageView
         android:layout_width="50dp"
