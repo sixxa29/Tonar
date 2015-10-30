@@ -2,9 +2,7 @@ package com.example.sigga.tonar.data;
 
 import org.json.JSONObject;
 
-/**
- * Created by sigga on 19.10.2015.
- */
+
 public class DateOfShow implements JSONPopulator {
     private String dateOfShow;
 

@@ -4,4 +4,14 @@
     <string name="tonleikar">Tónleikar</string>
     <string name="name">Hey BEip</string>
     <string name="action_settings">Settings</string>
+    <string name="front_all_concers">Allir Tónleikar</string>
+    <string name="front_today_concert">Tónleikar í dag</string>
+    <string name="front_head">TÓNAR</string>
+    <string name="list_concert_title">Tonleikar</string>
+    <string name="list_concert_date">Dagsetning</string>
+    <string name="list_concert_time">Tími</string>
+    <string name="concert_time">Tími</string>
+    <string name="concert_date">Dagsetning</string>
+    <string name="concert_location">Staðsetning</string>
+    <string name="concert_title">Tonleikar</string>
 </resources>

@@ -5,14 +5,17 @@
     android:layout_height="fill_parent"
     >
 
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="2dp"
         android:background="#D6D7D7"
         android:orientation="vertical"
-        android:gravity="center_vertical|center_horizontal|center"
-        >
+        android:layout_weight="1"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical|center_horizontal|center">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -20,16 +23,16 @@
             android:src="@drawable/back"
             android:clickable="true"
             android:id="@+id/backButton"
-            android:layout_gravity="start"
+            android:layout_gravity="left"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:foregroundGravity="top"
-            />
+            android:foregroundGravity="top"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/TonleikarImageView"
+
             />
 
         <TextView
@@ -49,14 +52,15 @@
             android:layout_height="fill_parent"
             >
 
+
+
             <ImageView
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:id="@+id/eventAddButton"
-                android:src="@drawable/calplustwo"
+                android:src="@drawable/calplus"
                 android:layout_alignParentEnd="true"
-                android:layout_gravity="end"
-                />
+                android:layout_gravity="right" />
 
             <TextView
                 android:id="@+id/ConcertLocation"
@@ -66,7 +70,7 @@
                 android:textSize="15sp"
                 android:text="@string/concert_location"
                 style="@style/AlertDialog.AppCompat"
-                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:fontFamily="sans-serif-light"
                 />
 

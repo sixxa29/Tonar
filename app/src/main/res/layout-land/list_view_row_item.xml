@@ -11,7 +11,7 @@
         android:layout_height="250dp"
         android:id="@+id/imageView"
         android:src="@drawable/tonar"
-
+        android:layout_alignParentStart="true"
         android:layout_gravity="center_horizontal|top"
         />
     <LinearLayout
@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:background="#96414141"
         android:orientation="vertical"
-        android:layout_gravity="start|bottom"
+        android:layout_gravity="left|bottom"
         >
         <TextView
             android:id="@+id/textViewItem"
@@ -31,7 +31,8 @@
             style="@style/AlertDialog.AppCompat"
             android:layout_gravity="center"
             android:foregroundGravity="top"
-
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
             android:fontFamily="sans-serif-light"
             />
         <TextView
@@ -44,7 +45,8 @@
             style="@style/AlertDialog.AppCompat"
             android:layout_gravity="center_horizontal|bottom"
             android:foregroundGravity="top"
-
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
             android:fontFamily="sans-serif-light"
             />
         <TextView
@@ -57,7 +59,8 @@
             style="@style/AlertDialog.AppCompat"
             android:layout_gravity="center_horizontal|bottom"
             android:foregroundGravity="top"
-
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
             android:fontFamily="sans-serif-light"
             />
     </LinearLayout>

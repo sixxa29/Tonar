@@ -1,44 +1,25 @@
 package com.example.sigga.tonar;
 
-import android.app.AlertDialog;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
-import android.provider.CalendarContract;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
-
-
-import com.example.sigga.tonar.DB.DbHelper;
 import com.example.sigga.tonar.data.EventDateName;
 import com.example.sigga.tonar.data.Result;
+import com.example.sigga.tonar.formats.AlertMe;
 import com.example.sigga.tonar.service.MidiConcertsCallback;
 import com.example.sigga.tonar.service.MidiConcertsService;
 
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements MidiConcertsCallback {
-
-    private TextView tonleikarTextView;
-    private TextView nameTextView;
+    TextView tonleikarTextView;
     private MidiConcertsService service;
-    public AlertDialog alertDialogStores;
-    private DbHelper m_dbHelper;
-    private SQLiteDatabase m_db;
-
-    private Cursor m_cursor;
-    private SimpleCursorAdapter m_ca;
-
-
+    private AlertMe alertMe = new AlertMe();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,37 +30,45 @@ public class MainActivity extends AppCompatActivity implements MidiConcertsCallb
             public void onClick(View v){
                 switch(v.getId()){
                     case R.id.buttonShowPopUp:
-                        service.getData(R.layout.list_view_row_item, MainActivity.this, 1);
+                        if(isConnected(v.getContext())){
+                            service.getData(R.layout.list_view_row_item, MainActivity.this, 1);
+                        }
+                        else{
+                            alertMe.canContinue(v.getContext(), "Hægan, hægan, ekkert wifi !");
+                        }
                         break;
                     case R.id.buttonShowPopUp2:
-                        service.getData(R.layout.list_view_row_item, MainActivity.this, 2);
+                        if (isConnected(v.getContext())){
+                            service.getData(R.layout.list_view_row_item, MainActivity.this, 2);
+                        }
+                        else{
+                            alertMe.canContinue(v.getContext(), "Hægan, hægan, ekkert wifi !");
+                        }
                         break;
                 }
-
             }
         };
-
         findViewById(R.id.buttonShowPopUp).setOnClickListener(handler);
         findViewById(R.id.buttonShowPopUp2).setOnClickListener(handler);
-
-
     }
-
-
+    private static boolean isConnected(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = null;
+        if (connectivityManager != null) {
+            networkInfo =
+                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        }
+        return networkInfo == null ? false : networkInfo.isConnected();
+    }
     @Override
     public void serviceSuccess(Result result) {
-
         EventDateName event = result.getEventDateName();
         Log.i("serviceSuccess", "eftir event dæmið");
-
         tonleikarTextView.setText(event.getEventDateName());
-
     }
-
     @Override
     public void serviceFail(Exception ex) {
         Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
     }
-
-
 }

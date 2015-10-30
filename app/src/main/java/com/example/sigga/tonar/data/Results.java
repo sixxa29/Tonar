@@ -1,8 +1,6 @@
 package com.example.sigga.tonar.data;
 
-/**
- * Created by sigga on 19.10.2015.
- */
+
 public class Results {
     private String eventDateName;
     private String name;
