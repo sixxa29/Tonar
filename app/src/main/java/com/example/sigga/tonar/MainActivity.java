@@ -49,13 +49,11 @@ public class MainActivity extends AppCompatActivity implements MidiConcertsCallb
             public void onClick(View v){
                 switch(v.getId()){
                     case R.id.buttonShowPopUp:
-                        Log.i("onCreate", "fyrir allt");
-                        service.getData( R.layout.list_view_row_item, MainActivity.this);
-                        Log.i("onCreate", "eftir allt");
+                        service.getData(R.layout.list_view_row_item, MainActivity.this, 1);
                         break;
                     case R.id.buttonShowPopUp2:
-                        Log.i("onCreate", "HELVITI");
-                        Toast.makeText(MainActivity.this, "Hæ þú ert kisa", Toast.LENGTH_SHORT).show();
+                        service.getData(R.layout.list_view_row_item, MainActivity.this, 2);
+                        break;
                 }
 
             }
