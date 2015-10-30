@@ -118,6 +118,8 @@ public class MidiConcertsService {
                     else{
                         alertMe.canContinue(mactivity, "Það eru engir tónleikar í dag, því miður...");
                     }
+                    ConcertsToday(results).clear();
+
                 }
             }
         }.execute();
@@ -184,6 +186,7 @@ public class MidiConcertsService {
     }
     public ArrayList<Results> ConcertsToday (ArrayList<Results> results){
         ArrayList<Results> concertsToday = new ArrayList<Results>();
+        concertsToday.removeAll(results);
         DateFormats forms = new DateFormats();
         for(int position = 0; position < results.size(); position++) {
             Results result = results.get(position);

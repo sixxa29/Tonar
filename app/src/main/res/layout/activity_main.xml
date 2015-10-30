@@ -18,11 +18,11 @@
             android:layout_marginTop="20dp"
             />
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical">
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/fontText"
                 android:fontFamily="sans-serif-thin"
@@ -31,14 +31,12 @@
                 android:text="@string/front_head"
                 />
             <Button
-                android:id="@+id/buttonShowPopUp"
+                android:id="@+id/buttonShowPopUp2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/front_all_concers"
+                android:text="@string/front_today_concert"
                 android:textSize="30sp"
-
                 android:layout_marginTop="153dp"
-
                 android:background="#7d2c2b2c"
                 android:layout_weight="1"
                 android:textColor="#faf9ff"
@@ -49,10 +47,10 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"/>
             <Button
-                android:id="@+id/buttonShowPopUp2"
+                android:id="@+id/buttonShowPopUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/front_today_concert"
+                android:text="@string/front_all_concers"
                 android:textSize="30sp"
                 android:singleLine="true"
 
