@@ -13,6 +13,7 @@ import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -23,7 +24,9 @@ import android.widget.Toast;
 import com.example.sigga.tonar.MainActivity;
 import com.example.sigga.tonar.R;
 import com.example.sigga.tonar.adapter.ArrayAdapterConcert;
+import com.example.sigga.tonar.adapter.ArrayAdapterConcertByDay;
 import com.example.sigga.tonar.data.Results;
+import com.example.sigga.tonar.formats.DateFormats;
 import com.example.sigga.tonar.listener.OnConcertClickListener;
 
 import org.json.JSONArray;
@@ -44,35 +47,29 @@ import java.util.Date;
  * Created by sigga on 8.10.2015.
  */
 public class MidiConcertsService {
+
     private MidiConcertsCallback callback;
     private Exception error;
     private ArrayAdapterConcert mConcertAdapter;
-    private AlertDialog alertDialogStores;
     private ArrayList<Results> results = new ArrayList<Results>();
     private Activity m;
+    AlertDialog alertDialogStores;
+    private DateFormats formats = new DateFormats();
 
 
     public MidiConcertsService(MidiConcertsCallback callback ) {
         this.callback = callback;
     }
 
-
-    public void getData(final int viewId, final Activity mactivity) {
+    public void getData(final int viewId, final Activity mactivity, final int btn) {
         this.m = mactivity;
-        //alertDialogStores1 = this.alertDialogStores;
-        Log.i("getData", "fyrir allt");
+
         new AsyncTask<String, Void, String>() {
-            /*We will be making the API call in a separate thread, which is always a good
-            practice since the user interface will not be blocked while the call is being made.
-            This is especially important in mobile devices that may drop network connections
-            or experience high network latency. To accomplish this, we will implement an
-            AsyncTask subclass.*/
 
             @Override
             protected String doInBackground(String... params) {
                 Log.i("doInBackground", "fyrir allt");
                 final String endpoint = "http://apis.is/concerts";
-
                 try {
                     URL url = new URL(endpoint);
 
@@ -98,15 +95,12 @@ public class MidiConcertsService {
 
             @Override
             protected void onPostExecute(String s) {
-                Log.i("onPostExecute", "fyrir allt");
                 if(s == null && error != null){
                     callback.serviceFail(error);
                     return;
                 }
 
-
                 try{
-                    Log.i("tryJson parsing", "fyrir allt");
                     JSONObject data = new JSONObject(s);
                     JSONArray queryResult = data.getJSONArray("results");
 
@@ -126,22 +120,37 @@ public class MidiConcertsService {
                     callback.serviceFail(e);
                 }
 
-                Log.i("onPostExecute", "eftr allt");
+
                 mConcertAdapter = new ArrayAdapterConcert(mactivity, viewId, results);
                 ListView listViewItems = new ListView(mactivity);
-                listViewItems.setAdapter(mConcertAdapter);
-                listViewItems.setOnItemClickListener(new OnConcertClickListener2());
-                LayoutInflater inflater = mactivity.getLayoutInflater();
-                View view=inflater.inflate(R.layout.list_view_header, null);
-                alertDialogStores = new AlertDialog.Builder(mactivity)
-                        .setView(listViewItems)
-                        .setCustomTitle(view)
-                        .show();
+                if(btn == 1){
+                    listViewItems.setAdapter(mConcertAdapter);
+                    listViewItems.setOnItemClickListener(new OnConcertClickListener2());
+                    LayoutInflater inflater = mactivity.getLayoutInflater();
+                    View view=inflater.inflate(R.layout.list_view_header, null);
+                    ImageView back = (ImageView) view.findViewById(R.id.backButton);
+                    alertDialogStores = new AlertDialog.Builder(mactivity)
+                            .setView(listViewItems)
+                            .show();
+                }
+                else if(btn == 2){
+                    if(ConcertsToday(results).size() > 0){
+                        ArrayAdapterConcertByDay mConcertAdapterByDay = new ArrayAdapterConcertByDay(mactivity, viewId, ConcertsToday(results));
+                        listViewItems.setAdapter(mConcertAdapterByDay);
+                        listViewItems.setOnItemClickListener(new OnConcertClickListener2());
+                        alertDialogStores = new AlertDialog.Builder(mactivity)
+                                .setView(listViewItems)
+                                .show();
+                    }
+                    else{
+                        // LIL BUB
+                    }
+
+                }
 
             }
 
         }.execute();
-        Log.i("getData", "eftr allt");
     }
 
 
@@ -149,94 +158,106 @@ public class MidiConcertsService {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-            final Context context = view.getContext();
-
             Results r = results.get(position);
+            final Context context = view.getContext();
             final String eventDateName = r.getEventDateName();
             final String name = r.getName();
             final String dateOfShow = r.getDateOfShow();
-            String userGroupName = r.getUserGroupName();
             final String eventHallName = r.getEventHallName();
-
-
             final Dialog dialog = new Dialog(context);
+
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.single_concert);
-            dialog.setTitle(eventDateName);
 
             TextView concertName = (TextView) dialog.findViewById(R.id.ConcertName);
-            concertName.setText(eventDateName);
-            String dateInString = r.getDateOfShow();
-            SimpleDateFormat oldformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            try {
-                Date date = oldformat.parse(dateInString);
-                DateFormat formats = null;
-                String monthYear = formats.getDateInstance().format(date);
-                TextView concertDate = (TextView) dialog.findViewById(R.id.ConcertDate);
-                concertDate.setText(monthYear);
-                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-                Date date1 = oldformat.parse(dateInString);
-                String reformattedTime = timeFormat.format(date1);
-                TextView concertTime = (TextView) dialog.findViewById(R.id.ConcertTime);
-                concertTime.setText("Kl " + reformattedTime);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
             TextView concertLocation = (TextView) dialog.findViewById(R.id.ConcertLocation);
+            TextView concertDate = (TextView) dialog.findViewById(R.id.ConcertDate);
+            TextView concertTime = (TextView) dialog.findViewById(R.id.ConcertTime);
+
+            concertName.setText(eventDateName);
             concertLocation.setText(eventHallName);
+            concertDate.setText(formats.getDateFormat(dateOfShow));
+            concertTime.setText("Kl " + formats.getTimeFormat(dateOfShow));
 
             ImageView image = (ImageView) view.findViewById(R.id.imageView);
             ImageView img = (ImageView) dialog.findViewById(R.id.TonleikarImageView);
             img.setImageDrawable(image.getDrawable());
-            View.OnClickListener handler = new View.OnClickListener() {
-                public void onClick(View v){
-                    addToCal( dateOfShow, eventDateName, eventHallName, name, position, m);
-                }
-            };
-            dialog.findViewById(R.id.eventAddButton).setOnClickListener(handler);
-
+            //dialog.findViewById(R.id.eventAddButton).setBackgroundResource(R.drawable.musi);
             dialog.show();
 
+            View.OnClickListener handler2 = new View.OnClickListener() {
+                public void onClick(View v){
+                    dialog.dismiss();
+               }
+            };
+            dialog.findViewById(R.id.backButton).setOnClickListener(handler2);
 
-            //alertDialogStores.cancel();
+                View.OnClickListener handler = new View.OnClickListener() {
+                    public void onClick(View v){
+                        addToCal( dateOfShow, eventDateName, eventHallName, name, m);
+                    }
+                };
+            dialog.findViewById(R.id.eventAddButton).setOnClickListener(handler);
 
         }
 
 
-        public void addToCal(String dateInString, String eventDateName, String eventHallName, String name, int pos, Activity mactivity ){
+        public void addToCal(String dateInString, String eventDateName, String eventHallName, String name, Activity mactivity ){
 
-            String year = dateInString.split("-")[0];
-            String month = dateInString.split("-")[1];
-            String dayplus = dateInString.split("-")[2];
-            String day = dayplus.split("T")[0];
-            String hourminute = dateInString.split("T")[1];
-            String hour = hourminute.split(":")[0];
-            String minute = hourminute.split(":")[1];
+            int year = Integer.parseInt(formats.getYear(dateInString));
+            int month =  Integer.parseInt(formats.getMonth(dateInString));
+            int day =  Integer.parseInt(formats.getDay(dateInString));
+            int hour =  Integer.parseInt(formats.getHour(dateInString));
+            int minute =  Integer.parseInt(formats.getMinute(dateInString));
 
-
-
-            //"YY:MM:dd:hh:mm"
             Calendar beginTime = Calendar.getInstance();
-            beginTime.set(Integer.parseInt(year), Integer.parseInt(month)-1, Integer.parseInt(day), Integer.parseInt(hour), Integer.parseInt(minute));
+            beginTime.set(year, month-1, day, hour, minute);
             long startMillis = beginTime.getTimeInMillis();
             Calendar endTime = Calendar.getInstance();
-            endTime.set(Integer.parseInt(year), Integer.parseInt(month)-1, Integer.parseInt(day), Integer.parseInt(hour) + 2, Integer.parseInt(minute));
+            endTime.set(year, month-1, day, hour+2, minute);
             long endMillis = endTime.getTimeInMillis();
-
 
             Intent intent = new Intent(Intent.ACTION_INSERT)
                     .setData(CalendarContract.Events.CONTENT_URI)
-                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
-                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMillis)
+                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endMillis)
                     .putExtra(CalendarContract.Events.TITLE, eventDateName)
                     .putExtra(CalendarContract.Events.DESCRIPTION, name)
                     .putExtra(CalendarContract.Events.EVENT_LOCATION, eventHallName)
                     .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
             mactivity.startActivity(intent);
 
+        }
+    }
 
+    public ArrayList<Results> ConcertsToday (ArrayList<Results> results){
+
+        ArrayList<Results> concertsToday = new ArrayList<Results>();
+        DateFormats forms = new DateFormats();
+        for(int position = 0; position < results.size(); position++) {
+
+            Results result = results.get(position);
+
+            String dateInString = result.getDateOfShow();
+            String fromAPI = forms.getDateFormat(dateInString);
+
+            DateFormat df = new SimpleDateFormat("dd MMM yyyy");
+            Date today = Calendar.getInstance().getTime();
+            String todayString = df.format(today);
+
+            if (todayString.compareTo(fromAPI) == 0) {
+                Results addToday = new Results(
+                        result.getEventDateName(),
+                        result.getName(),
+                        result.getDateOfShow(),
+                        result.getUserGroupName(),
+                        result.getEventHallName(),
+                        result.getImageSource(), position);
+                concertsToday.add(addToday);
+            }
 
         }
+        return concertsToday;
     }
 
     public class ConcertException extends Exception{
