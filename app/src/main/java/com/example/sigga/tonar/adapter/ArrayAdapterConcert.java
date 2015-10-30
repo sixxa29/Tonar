@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.example.sigga.tonar.R;
 import com.example.sigga.tonar.data.Results;
+import com.example.sigga.tonar.formats.DateFormats;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -42,8 +43,8 @@ public class ArrayAdapterConcert extends ArrayAdapter<Results>  {
     Context mContext;
     int layoutResourceId;
     ArrayList<Results> data = null;
-    boolean isHeader;
-
+    boolean isHeader = true;
+    DateFormats forms = new DateFormats();
 
     public ArrayAdapterConcert(Context mContext, int layoutResourceId, ArrayList<Results> data){
         super(mContext, layoutResourceId, data);
@@ -54,19 +55,19 @@ public class ArrayAdapterConcert extends ArrayAdapter<Results>  {
         this.isHeader = true;
     }
 
-
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-
         Results result = data.get(position);
+        LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+
         if(convertView == null){
 
-            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
             convertView = inflater.inflate(layoutResourceId, parent, false);
+            isHeader = false;
 
 
+        }
             TextView textViewItem = (TextView) convertView.findViewById(R.id.textViewItem);
             TextView textViewItem2 = (TextView) convertView.findViewById(R.id.textViewItem2);
             TextView textViewItem3 = (TextView) convertView.findViewById(R.id.textViewItem3);
@@ -75,40 +76,18 @@ public class ArrayAdapterConcert extends ArrayAdapter<Results>  {
             textViewItem.setTag(result.getDateOfShow());
 
             String dateInString = result.getDateOfShow();
-            SimpleDateFormat oldformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-            try {
-                Date date = oldformat.parse(dateInString);
-                DateFormat formats = null;
-                String monthYear = formats.getDateInstance().format(date);
-                textViewItem2.setText(monthYear);
-
-                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-                Date date1 = oldformat.parse(dateInString);
-                String reformattedTime = timeFormat.format(date1);
-                textViewItem3.setText("Kl " + reformattedTime);
-            }
-            catch (Exception e){
-                return null;
-            }
+            textViewItem2.setText(forms.getDateFormat(dateInString));
+            textViewItem3.setText("Kl " + forms.getTimeFormat(dateInString));
 
             ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
-
             Picasso
                     .with(mContext)
                     .load(result.getImageSource())
                     .fit()
                     .into(imageView);
-
-        }
-
-
-
         return convertView;
     }
-
-
-
 
 }
 
