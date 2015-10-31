@@ -1,6 +1,7 @@
 package com.example.sigga.tonar;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
@@ -11,9 +12,13 @@ import android.widget.Toast;
 import android.util.Log;
 import com.example.sigga.tonar.data.EventDateName;
 import com.example.sigga.tonar.data.Result;
+import com.example.sigga.tonar.data.Results;
 import com.example.sigga.tonar.formats.AlertMe;
 import com.example.sigga.tonar.service.MidiConcertsCallback;
 import com.example.sigga.tonar.service.MidiConcertsService;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements MidiConcertsCallback {
@@ -52,15 +57,23 @@ public class MainActivity extends AppCompatActivity implements MidiConcertsCallb
         findViewById(R.id.buttonShowPopUp2).setOnClickListener(handler);
     }
     private static boolean isConnected(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager)
-                context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = null;
-        if (connectivityManager != null) {
-            networkInfo =
-                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        boolean is3g = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+                .isConnectedOrConnecting();
+        boolean isWifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+                .isConnectedOrConnecting();
+
+        if (!is3g && !isWifi)
+        {
+            return false;
         }
-        return networkInfo == null ? false : networkInfo.isConnected();
+        else
+        {
+            return true;
+        }
     }
+
     @Override
     public void serviceSuccess(Result result) {
         EventDateName event = result.getEventDateName();
@@ -71,4 +84,5 @@ public class MainActivity extends AppCompatActivity implements MidiConcertsCallb
     public void serviceFail(Exception ex) {
         Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
     }
+
 }

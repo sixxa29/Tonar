@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.provider.CalendarContract;
 import android.util.Log;
@@ -26,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -40,7 +42,7 @@ public class MidiConcertsService {
     private MidiConcertsCallback callback;
     private Exception error;
     private ArrayAdapterConcert mConcertAdapter;
-    private ArrayList<Results> results = new ArrayList<Results>();
+    //private ArrayList<Results> results2;
     private Activity m;
     private AlertDialog alertDialogStores;
     private DateFormats formats = new DateFormats();
@@ -74,10 +76,11 @@ public class MidiConcertsService {
             }
             @Override
             protected void onPostExecute(String s) {
-                if(s == null && error != null){
+                if(s == null && error != null) {
                     callback.serviceFail(error);
                     return;
                 }
+                ArrayList<Results> results = new ArrayList<Results>();
                 try{
                     JSONObject data = new JSONObject(s);
                     JSONArray queryResult = data.getJSONArray("results");
@@ -90,18 +93,19 @@ public class MidiConcertsService {
                                 concerts.getString("eventHallName"),
                                 concerts.getString("imageSource"), i);
                         results.add(result);
+
                     }
                 }catch (JSONException e){
                     callback.serviceFail(e);
                 }
                 mConcertAdapter = new ArrayAdapterConcert(mactivity, viewId, results);
                 ListView listViewItems = new ListView(mactivity);
+
                 if(btn == 1){
                     listViewItems.setAdapter(mConcertAdapter);
-                    listViewItems.setOnItemClickListener(new OnConcertClickListener2());
-                    LayoutInflater inflater = mactivity.getLayoutInflater();
-                    View view=inflater.inflate(R.layout.list_view_header, null);
-                    ImageView back = (ImageView) view.findViewById(R.id.backButton);
+                    OnConcertClickListener2 c = new OnConcertClickListener2();
+                    c.setResults(results);
+                    listViewItems.setOnItemClickListener(c);
                     alertDialogStores = new AlertDialog.Builder(mactivity)
                             .setView(listViewItems)
                             .show();
@@ -110,7 +114,9 @@ public class MidiConcertsService {
                     if(ConcertsToday(results).size() > 0){
                         ArrayAdapterConcertByDay mConcertAdapterByDay = new ArrayAdapterConcertByDay(mactivity, viewId, ConcertsToday(results));
                         listViewItems.setAdapter(mConcertAdapterByDay);
-                        listViewItems.setOnItemClickListener(new OnConcertClickListener2());
+                        OnConcertClickListener2 c = new OnConcertClickListener2();
+                        c.setResults(results);
+                        listViewItems.setOnItemClickListener(c);
                         alertDialogStores = new AlertDialog.Builder(mactivity)
                                 .setView(listViewItems)
                                 .show();
@@ -124,36 +130,55 @@ public class MidiConcertsService {
             }
         }.execute();
     }
+
     public class OnConcertClickListener2 implements AdapterView.OnItemClickListener {
+
+        private ArrayList<Results> r;
+
+        public ArrayList<Results> getResults( ){
+            return r;
+        }
+
+        public void setResults(ArrayList<Results> r) {
+            this.r = r;
+        }
+
         @Override
         public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-            Results r = results.get(position);
+            Results r = getResults().get(position);
             final Context context = view.getContext();
             final String eventDateName = r.getEventDateName();
             final String name = r.getName();
             final String dateOfShow = r.getDateOfShow();
             final String eventHallName = r.getEventHallName();
+
             final Dialog dialog = new Dialog(context);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.single_concert);
+
             TextView concertName = (TextView) dialog.findViewById(R.id.ConcertName);
             TextView concertLocation = (TextView) dialog.findViewById(R.id.ConcertLocation);
             TextView concertDate = (TextView) dialog.findViewById(R.id.ConcertDate);
             TextView concertTime = (TextView) dialog.findViewById(R.id.ConcertTime);
+
             concertName.setText(eventDateName);
             concertLocation.setText(eventHallName);
             concertDate.setText(formats.getDateFormat(dateOfShow));
             concertTime.setText("Kl " + formats.getTimeFormat(dateOfShow));
+
             ImageView image = (ImageView) view.findViewById(R.id.imageView);
             ImageView img = (ImageView) dialog.findViewById(R.id.TonleikarImageView);
             img.setImageDrawable(image.getDrawable());
+
             dialog.show();
+
             View.OnClickListener handler2 = new View.OnClickListener() {
                 public void onClick(View v){
                     dialog.dismiss();
                 }
             };
             dialog.findViewById(R.id.backButton).setOnClickListener(handler2);
+
             View.OnClickListener handler = new View.OnClickListener() {
                 public void onClick(View v){
                     addToCal( dateOfShow, eventDateName, eventHallName, name, m);
@@ -183,7 +208,7 @@ public class MidiConcertsService {
                     .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
             mactivity.startActivity(intent);
         }
-    }
+   }
     public ArrayList<Results> ConcertsToday (ArrayList<Results> results){
         ArrayList<Results> concertsToday = new ArrayList<Results>();
         concertsToday.removeAll(results);
@@ -209,6 +234,8 @@ public class MidiConcertsService {
         }
         return concertsToday;
     }
+
+
     public class ConcertException extends Exception{
         public ConcertException(String detailMessage){
             super(detailMessage);
